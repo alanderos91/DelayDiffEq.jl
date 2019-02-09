@@ -15,6 +15,12 @@ include("common.jl")
 
             sol2 = solve(prob_notinplace, MethodOfSteps(Vern6()))
 
+            @show sol.t, sol2.t
+            @show sol[1, :], sol2.u
+
+            @show norm(sol.t - sol2.t)
+            @show norm(sol[1, :] - sol2.u)
+
             # fails on Haswell CPUs: https://github.com/JuliaDiffEq/DelayDiffEq.jl/issues/97
             Sys.CPU_NAME == "haswell" || @test sol.t ≈ sol2.t && sol[1, :] ≈ sol2.u
         end
@@ -54,6 +60,12 @@ include("common.jl")
             @test sol.errors[:l2] < 6.2e-4
 
             sol2 = solve(prob_notinplace, MethodOfSteps(Vern9()))
+
+            @show sol.t, sol2.t
+            @show sol[1, :], sol2.u
+
+            @show norm(sol.t - sol2.t)
+            @show norm(sol[1, :] - sol2.u)
 
             # fails on Haswell CPUs: https://github.com/JuliaDiffEq/DelayDiffEq.jl/issues/97
             Sys.CPU_NAME == "haswell" || @test sol.t ≈ sol2.t && sol[1, :] ≈ sol2.u
