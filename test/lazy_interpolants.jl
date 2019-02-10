@@ -1,9 +1,13 @@
 include("common.jl")
+
+using LinearAlgebra
+
 @testset "Lazy interpolants" begin
     ## simple problems
     @testset "simple problems" begin
         prob_inplace = prob_dde_1delay
         prob_notinplace = prob_dde_1delay_scalar_notinplace
+        ts = 0:0.1:10
 
         # Vern6
         @testset "Vern6" begin
@@ -23,6 +27,15 @@ include("common.jl")
 
             # fails on Haswell CPUs: https://github.com/JuliaDiffEq/DelayDiffEq.jl/issues/97
             Sys.CPU_NAME == "haswell" || @test sol.t ≈ sol2.t && sol[1, :] ≈ sol2.u
+
+            solts = [u[1] for u in sol(ts)]
+            sol2ts = sol2(ts)
+
+            @show solts, sol2ts
+
+            @show norm(solts - sol2ts)
+
+            @test solts ≈ sol2ts
         end
 
         # Vern7
@@ -69,6 +82,15 @@ include("common.jl")
 
             # fails on Haswell CPUs: https://github.com/JuliaDiffEq/DelayDiffEq.jl/issues/97
             Sys.CPU_NAME == "haswell" || @test sol.t ≈ sol2.t && sol[1, :] ≈ sol2.u
+
+            solts = [u[1] for u in sol(ts)]
+            sol2ts = sol2(ts)
+
+            @show solts, sol2ts
+
+            @show norm(solts - sol2ts)
+
+            @test solts ≈ sol2ts
         end
     end
 
